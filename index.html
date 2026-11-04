@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Приглашение на свадьбу — Сашечка и Олечка</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Montserrat:wght@300;400;500&display=swap');
+    
+    :root {
+      --rose: #d4a5a5; 
+      --rose-deep: #c2185b; 
+      --gold: #c9a86c;
+      --text: #5d4037; 
+      --text-light: #8a6f6f; 
+      --pink-mid: #f8bbd0;
+    }
+    
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: 'Cormorant Garamond', serif;
+      background: linear-gradient(135deg, #fce4ec 0%, #fff0f5 100%);
+      color: var(--text); 
+      min-height: 100vh; 
+      overflow-x: hidden;
+      position: relative;
+    }
+    
+    /* Контейнер для анимации. z-index: 50 ставит его ПЕРЕД карточкой */
+    #animation-container {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      pointer-events: none; /* Позволяет нажимать на кнопки сквозь лепестки */
+      overflow: hidden; z-index: 50; 
+    }
+    
+    .falling-item {
+      position: absolute;
+      top: -10vh;
+      user-select: none;
+      animation: fall linear infinite;
+      pointer-events: none;
+    }
+    
+    @keyframes fall {
+      0%   { transform: translateY(-10vh) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+    }
+    
+    .page { position: relative; z-index: 10; max-width: 600px; margin: 0 auto; padding: 40px 16px 80px; }
+    
+    .card {
+      background: rgba(255, 255, 255, 0.85); 
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-radius: 28px;
+      box-shadow: 0 15px 40px rgba(194, 24, 91, 0.08);
+      border: 1px solid rgba(248, 187, 208, 0.5); 
+      overflow: hidden; 
+      position: relative; 
+    }
+    
+    .hero {
+      padding: 50px 24px 30px; text-align: center;
+      background: linear-gradient(180deg, rgba(252, 228, 236, 0.6) 0%, transparent 100%);
+    }
+    
+    .cross { font-size: 28px; color: var(--gold); opacity: 0.9; margin-bottom: 15px; }
+    
+    .names {
+      font-family: 'Playfair Display', serif; font-size: 2.5rem; font-weight: 600;
+      color: var(--rose-deep); letter-spacing: 0.5px; line-height: 1.2;
+    }
+    
+    .amp {
+      font-family: 'Playfair Display', serif; font-style: italic;
+      font-size: 1.8rem; color: var(--rose); margin: 5px 0 10px;
+    }
+    
+    .date-line { font-family: 'Montserrat', sans-serif; font-size: 1.2rem; font-weight: 500; color: #880e4f; margin-top: 20px; text-transform: uppercase; letter-spacing: 1px; }
+    .time-line { font-family: 'Montserrat', sans-serif; font-size: 1rem; color: var(--text-light); margin-top: 8px; }
+    .place-line { font-family: 'Montserrat', sans-serif; font-size: 0.9rem; color: var(--text-light); margin-top: 6px; }
+    
+    .countdown { display: flex; justify-content: center; gap: 15px; margin: 30px 0 10px; }
+    .count-item {
+      background: #fff; border-radius: 16px; padding: 12px;
+      min-width: 70px; box-shadow: 0 5px 15px rgba(248, 187, 208, 0.3);
+      border: 1px dashed var(--pink-mid);
+    }
+    .count-num {
+      font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 600;
+      color: var(--rose-deep); line-height: 1.1;
+    }
+    .count-label { font-family: 'Montserrat', sans-serif; font-size: 0.75rem; color: var(--text-light); margin-top: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+    
+    .photo-block {
+      margin: 25px 24px 15px; border-radius: 20px; overflow: hidden;
+      background: linear-gradient(145deg, #fce4ec, #fff0f5); height: 220px;
+      display: flex; align-items: center; justify-content: center;
+      border: 1px dashed var(--rose); box-shadow: inset 0 0 20px rgba(255,255,255,0.5);
+    }
+    .photo-block span { font-family: 'Montserrat', sans-serif; font-size: 0.9rem; color: #b08080; text-align: center; line-height: 1.6; }
+    .photo-block img { width: 100%; height: 100%; object-fit: cover; display: none; }
+    
+    .cal-wrap { display: flex; justify-content: center; margin: 30px 0; }
+    .cal {
+      width: 280px; background: #fff; border-radius: 16px;
+      box-shadow: 0 10px 25px rgba(248, 187, 208, 0.3);
+      border: 1px solid var(--pink-mid); overflow: hidden;
+    }
+    .cal-head {
+      background: linear-gradient(135deg, #f48fb1, #ec407a); color: white;
+      font-family: 'Montserrat', sans-serif; font-size: 0.9rem; padding: 12px 0; 
+      letter-spacing: 1.5px; text-transform: uppercase; text-align: center; font-weight: 500;
+    }
+    
+    .cal-table { width: 100%; border-collapse: collapse; text-align: center; padding: 10px; display: table; }
+    .cal-table th { font-family: 'Montserrat', sans-serif; font-size: 0.75rem; color: var(--text-light); font-weight: 500; padding: 10px 0 5px; }
+    .cal-table td { font-family: 'Montserrat', sans-serif; font-size: 0.9rem; color: #5d4037; padding: 6px 0; }
+    .day-heart-wrap {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 26px; height: 26px; border-radius: 50%;
+      background: linear-gradient(135deg, #f48fb1, #ec407a); color: white;
+      font-weight: 600; box-shadow: 0 4px 12px rgba(236, 64, 122, 0.4); position: relative;
+    }
+    .day-heart-wrap::after {
+      content: '♥'; position: absolute; top: -6px; right: -6px; font-size: 13px; color: #c2185b;
+    }
+    
+    .content { padding: 10px 30px 20px; text-align: center; }
+    .divider { width: 80px; height: 1px; background: linear-gradient(90deg, transparent, #ec407a, transparent); margin: 0 auto 25px; }
+    .invite-text { font-size: 1.3rem; line-height: 1.6; color: #5d4037; margin-bottom: 25px; }
+    .verse { font-style: italic; font-size: 1.2rem; color: #880e4f; margin: 30px 0; padding: 20px; line-height: 1.5; border-top: 1px solid var(--pink-mid); border-bottom: 1px solid var(--pink-mid); }
+    .verse cite { display: block; margin-top: 10px; font-style: normal; font-size: 1rem; font-family: 'Montserrat', sans-serif; color: var(--rose-deep); }
+    
+    .section-title { font-family: 'Playfair Display', serif; font-size: 1.6rem; color: var(--rose-deep); text-align: center; margin: 35px 0 20px; font-weight: 500; }
+    
+    .program { margin: 0 25px 20px; }
+    .program-item { display: flex; gap: 20px; padding: 15px 0; border-bottom: 1px solid rgba(248, 187, 208, 0.4); align-items: center; }
+    .program-item:last-child { border-bottom: none; }
+    .program-time { font-family: 'Montserrat', sans-serif; font-size: 1.1rem; color: var(--rose-deep); min-width: 60px; font-weight: 600; }
+    .program-name { font-size: 1.25rem; color: #5d4037; }
+    
+    .info-cards { display: flex; flex-direction: column; gap: 15px; margin: 30px 25px 20px; }
+    .info-card { background: #fff; border-radius: 16px; padding: 20px; text-align: left; border: 2px dashed var(--pink-mid); }
+    .info-card h4 { font-family: 'Playfair Display', serif; font-size: 1.3rem; color: var(--rose-deep); margin-bottom: 8px; font-weight: 600; }
+    .info-card p { font-family: 'Montserrat', sans-serif; font-size: 0.95rem; color: #5d4037; line-height: 1.6; }
+    
+    .map-section { margin: 30px 25px 10px; }
+    .map-wrap { border-radius: 16px; overflow: hidden; box-shadow: 0 8px 25px rgba(248, 187, 208, 0.4); border: 1px solid var(--pink-mid); }
+    .map-wrap iframe { display: block; width: 100%; height: 250px; border: none; }
+    .map-buttons { display: flex; justify-content: center; gap: 15px; margin-top: 20px; flex-wrap: wrap; }
+    
+    .btn-outline { font-family: 'Montserrat', sans-serif; font-size: 0.95rem; font-weight: 500; padding: 10px 20px; border-radius: 30px; border: 1.5px solid var(--rose-deep); background: transparent; color: var(--rose-deep); cursor: pointer; transition: all 0.3s; text-decoration: none; display: inline-block; }
+    .btn-outline:hover { background: rgba(248, 187, 208, 0.2); }
+    
+    .rsvp-text { text-align: center; font-size: 1.25rem; color: #5d4037; line-height: 1.6; margin: 40px 25px 10px; }
+    .deadline { text-align: center; font-family: 'Montserrat', sans-serif; font-size: 0.95rem; color: var(--rose-deep); margin: 5px 25px 0; font-weight: 600; text-transform: uppercase; }
+    
+    .buttons { display: flex; gap: 15px; justify-content: center; padding: 25px 20px 20px; flex-wrap: wrap; }
+    .btn { font-family: 'Montserrat', sans-serif; font-size: 1rem; font-weight: 500; padding: 14px 35px; border-radius: 50px; border: none; cursor: pointer; transition: all 0.3s ease; letter-spacing: 0.5px; min-width: 160px; }
+    .btn-yes { background: linear-gradient(135deg, #f48fb1, #ec407a); color: white; box-shadow: 0 8px 20px rgba(236, 64, 122, 0.4); }
+    .btn-yes:hover { transform: translateY(-3px); box-shadow: 0 12px 25px rgba(236, 64, 122, 0.5); }
+    .btn-no { background: #fff; color: #8a6f6f; border: 1.5px solid #d4a5a5; }
+    .btn-no:hover { background: #fce4ec; }
+    
+    .footer { text-align: center; padding: 20px 20px 40px; font-size: 1.1rem; color: #b09090; font-style: italic; }
+
+    /* Блок музыки */
+    .music-widget {
+      position: fixed; top: 20px; right: 20px; z-index: 100;
+      display: flex; align-items: center; gap: 10px; flex-direction: row-reverse;
+    }
+    .music-btn {
+      width: 50px; height: 50px; border-radius: 50%; flex-shrink: 0;
+      background: rgba(255, 255, 255, 0.95); border: 2px solid var(--pink-mid);
+      display: flex; align-items: center; justify-content: center; cursor: pointer;
+      box-shadow: 0 5px 15px rgba(248, 187, 208, 0.4); font-size: 22px; color: var(--rose-deep);
+      transition: transform 0.2s, background 0.3s;
+    }
+    .music-btn:hover { transform: scale(1.05); }
+    .music-btn:active { transform: scale(0.95); }
+    
+    .music-btn.playing { 
+      background: var(--rose-deep); 
+      color: white; 
+      border-color: var(--rose-deep); 
+      animation: pulse-music 1.5s infinite;
+    }
+
+    @keyframes pulse-music {
+      0% { box-shadow: 0 0 0 0 rgba(194, 24, 91, 0.5); }
+      70% { box-shadow: 0 0 0 15px rgba(194, 24, 91, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(194, 24, 91, 0); }
+    }
+    
+    .music-tooltip {
+      background: rgba(255, 255, 255, 0.95); padding: 8px 16px; border-radius: 20px;
+      font-family: 'Montserrat', sans-serif; font-size: 0.9rem; font-weight: 500;
+      color: var(--rose-deep); border: 1px solid var(--pink-mid);
+      box-shadow: 0 5px 15px rgba(248, 187, 208, 0.3);
+      opacity: 0; transform: translateX(10px); pointer-events: none;
+      transition: all 0.4s ease; white-space: nowrap;
+    }
+    .music-tooltip.visible { opacity: 1; transform: translateX(0); }
+
+    @media (max-width: 480px) {
+      .names { font-size: 2.1rem; }
+      .count-item { min-width: 60px; padding: 10px; }
+      .count-num { font-size: 1.5rem; }
+      .cal { width: 250px; }
+      .btn { min-width: 130px; padding: 12px 25px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Фон для оригинальной анимации цветочков и сердечек поверх карточки -->
+  <div id="animation-container"></div>
+
+  <!-- Кнопка музыки с подсказкой -->
+  <div class="music-widget">
+    <div class="music-btn" id="musicBtn">♪</div>
+    <div class="music-tooltip" id="musicTooltip">Включить музыку</div>
+  </div>
+
+  <div class="page">
+    <div class="card">
+      <div class="hero">
+        <div class="cross">✝</div>
+        <div class="names">Сашечка</div>
+        <div class="amp">&</div>
+        <div class="names">Олечка</div>
+        <div class="date-line">12 декабря 2026</div>
+        <div class="time-line">начало в 14:00</div>
+        <div class="place-line">г. Липецк, пер. Ландшафтный, д. 21а</div>
+
+        <div class="countdown">
+          <div class="count-item"><div class="count-num" id="days">—</div><div class="count-label">дней</div></div>
+          <div class="count-item"><div class="count-num" id="hours">—</div><div class="count-label">часов</div></div>
+          <div class="count-item"><div class="count-num" id="mins">—</div><div class="count-label">минут</div></div>
+        </div>
+      </div>
+
+      <div class="photo-block">
+        <span>Здесь будет наше фото<br>(добавим позже)</span>
+        <img id="couplePhoto" alt="Сашечка и Олечка">
+      </div>
+
+      <div class="cal-wrap">
+        <div class="cal">
+          <div class="cal-head">Декабрь 2026</div>
+          <table class="cal-table">
+            <thead>
+              <tr><th>Пн</th><th>Вт</th><th>Ср</th><th>Чт</th><th>Пт</th><th>Сб</th><th>Вс</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td></td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td>
+              </tr>
+              <tr>
+                <td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td><div class="day-heart-wrap">12</div></td><td>13</td>
+              </tr>
+              <tr>
+                <td>14</td><td>15</td><td>16</td><td>17</td><td>18</td><td>19</td><td>20</td>
+              </tr>
+              <tr>
+                <td>21</td><td>22</td><td>23</td><td>24</td><td>25</td><td>26</td><td>27</td>
+              </tr>
+              <tr>
+                <td>28</td><td>29</td><td>30</td><td>31</td><td></td><td></td><td></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="divider"></div>
+        <p class="invite-text">
+          Возлюбленные во Христе!<br><br>
+          С радостью и глубокой благодарностью Богу<br>
+          приглашаем <strong>вас</strong> разделить с нами<br>
+          светлый день нашего венчания.
+        </p>
+        <div class="verse">
+          «Итак, что Бог сочетал,<br>того человек да не разлучает.»
+          <cite>Мф. 19:6</cite>
+        </div>
+        <p class="invite-text" style="margin-bottom:0">
+          Мы будем счастливы видеть вас рядом<br>
+          в этот важный и священный момент.
+        </p>
+      </div>
+
+      <div class="section-title">Программа дня</div>
+      <div class="program">
+        <div class="program-item"><div class="program-time">14:00</div><div class="program-name">Сбор гостей</div></div>
+        <div class="program-item"><div class="program-time">15:00</div><div class="program-name">Свадебная церемония</div></div>
+        <div class="program-item"><div class="program-time">16:30</div><div class="program-name">Начало банкета</div></div>
+        <div class="program-item"><div class="program-time">22:00</div><div class="program-name">Завершение вечера</div></div>
+      </div>
+
+      <div class="info-cards">
+        <div class="info-card">
+          <h4>👠 Сменная обувь</h4>
+          <p>Обязательно возьмите с собой сменную обувь. Если вдруг забудете — у нас будут одноразовые тапочки.</p>
+        </div>
+        <div class="info-card">
+          <h4>✨ Хорошее настроение</h4>
+          <p>Это самое важное, что нужно захватить с собой. Остальное мы уже предусмотрели.</p>
+        </div>
+      </div>
+
+      <div class="section-title">Место празднования</div>
+      <div class="photo-block" style="margin-top:0">
+        <span>Здесь будет фото места<br>празднования</span>
+        <img id="venuePhoto" alt="Место празднования">
+      </div>
+      <p style="text-align:center;font-family:'Montserrat',sans-serif;font-size:0.95rem;color:#7a6060;margin:15px 20px 0">
+        г. Липецк, пер. Ландшафтный, д. 21а
+      </p>
+
+      <div class="map-section">
+        <div class="map-wrap" id="mapWrap">
+          <iframe id="mapFrame" src="https://yandex.ru/map-widget/v1/?ll=39.469%2C52.5885&z=16&pt=39.469,52.5885,pm2rdm&l=map" allowfullscreen loading="lazy"></iframe>
+        </div>
+        <div class="map-buttons">
+          <button class="btn-outline" onclick="recenterMap()">📍 Показать на карте</button>
+          <a class="btn-outline" href="https://yandex.ru/maps/?pt=39.469,52.5885&z=17&l=map" target="_blank" rel="noopener">В навигатор ↗</a>
+        </div>
+      </div>
+
+      <p class="rsvp-text">
+        Пожалуйста, подтвердите своё присутствие<br>
+        или скажите, что не можете присутствовать,<br>
+        нажав на кнопку ниже
+      </p>
+      <p class="deadline">до 21 ноября 2026 года</p>
+
+      <div class="buttons">
+        <button class="btn btn-yes" onclick="sendYes()">Придём</button>
+        <button class="btn btn-no" onclick="sendNo()">Не получится</button>
+      </div>
+
+      <div class="footer">С любовью и молитвой,<br>Сашечка и Олечка</div>
+    </div>
+  </div>
+
+  <audio id="bgMusic" loop preload="auto">
+    <source src="Canon_beautiful_part.mp3" type="audio/mpeg">
+  </audio>
+
+  <script>
+    // 1. УПРАВЛЕНИЕ МУЗЫКОЙ И ВСПЛЫВАЮЩЕЙ ПОДСКАЗКОЙ
+    const audio = document.getElementById('bgMusic');
+    const btn = document.getElementById('musicBtn');
+    const tooltip = document.getElementById('musicTooltip');
+    let isPlaying = false;
+    let fadeTimer = null;
+    let tooltipTimer = null;
+    let initialDelayTimer = null;
+
+    function showTooltip(text, duration) {
+      tooltip.textContent = text;
+      tooltip.classList.add('visible');
+      clearTimeout(tooltipTimer);
+      tooltipTimer = setTimeout(() => {
+        tooltip.classList.remove('visible');
+      }, duration);
+    }
+
+    // При открытии сайта показываем "Включить музыку" на 7 секунд
+    window.addEventListener('DOMContentLoaded', () => {
+      initialDelayTimer = setTimeout(() => {
+        if (!isPlaying) showTooltip('Включить музыку', 7000);
+      }, 500);
+    });
+
+    function fadeVolume(from, to, duration, onDone) {
+      const steps = 25;
+      const stepTime = duration / steps;
+      const diff = (to - from) / steps;
+      let current = from;
+      let i = 0;
+      clearInterval(fadeTimer);
+      fadeTimer = setInterval(function() {
+        i++; current += diff;
+        audio.volume = Math.max(0, Math.min(1, current));
+        if (i >= steps) {
+          clearInterval(fadeTimer);
+          audio.volume = to;
+          if (onDone) onDone();
+        }
+      }, stepTime);
+    }
+
+    btn.onclick = function() {
+      clearTimeout(initialDelayTimer); 
+
+      if (isPlaying) {
+        // Отключаем
+        isPlaying = false;
+        btn.textContent = '♪'; 
+        btn.classList.remove('playing');
+        showTooltip('Включить музыку', 3000); 
+        
+        fadeVolume(audio.volume, 0, 500, function() {
+          audio.pause();
+        });
+      } else {
+        // Включаем
+        isPlaying = true;
+        btn.textContent = '🔊'; 
+        btn.classList.add('playing');
+        showTooltip('Отключить музыку', 3000); 
+        
+        audio.currentTime = 0; 
+        audio.volume = 0;
+        const p = audio.play();
+        if (p !== undefined) {
+          p.then(function() {
+            fadeVolume(0, 0.72, 1800); 
+          }).catch(function(err) {
+            console.log("Автозапуск заблокирован:", err);
+          });
+        }
+      }
+    };
+
+    // 2. ОРИГИНАЛЬНАЯ АНИМАЦИЯ
+    const items = ['🌸', '💖', '🤍', '🌺', '✨', '💕'];
+    const container = document.getElementById('animation-container');
+
+    function createFallingItem() {
+        const el = document.createElement('div');
+        el.classList.add('falling-item');
+        el.innerText = items[Math.floor(Math.random() * items.length)];
+        
+        el.style.left = Math.random() * 100 + 'vw';
+        el.style.fontSize = (Math.random() * 15 + 15) + 'px';
+        
+        const duration = Math.random() * 7 + 5;
+        el.style.animationDuration = duration + 's';
+        
+        container.appendChild(el);
+
+        setTimeout(() => {
+            el.remove();
+        }, duration * 1000);
+    }
+    setInterval(createFallingItem, 400);
+
+    // 3. ТАЙМЕР ОБРАТНОГО ОТСЧЕТА
+    function updateCountdown(){
+      const w=new Date('2026-12-12T14:00:00'), n=new Date(); let d=w-n; if(d<0) d=0;
+      document.getElementById('days').textContent=Math.floor(d/86400000);
+      document.getElementById('hours').textContent=Math.floor((d%86400000)/3600000);
+      document.getElementById('mins').textContent=Math.floor((d%3600000)/60000);
+    }
+    updateCountdown(); setInterval(updateCountdown,60000);
+
+    // 4. КАРТА И КНОПКИ TELEGRAM
+    function recenterMap() {
+      var frame = document.getElementById('mapFrame');
+      if (frame) frame.src = 'https://yandex.ru/map-widget/v1/?ll=39.469%2C52.5885&z=16&pt=39.469,52.5885,pm2rdm&l=map';
+    }
+
+    const TG = 'username'; // Замените на ваш ник в ТГ
+    function sendYes() {
+      const text = '🌸 Приглашение на свадьбу Сашечки и Олечки\n\n✅ МЫ ПРИДЁМ (семья)\n\n12 декабря 2026, 14:00\nг. Липецк, пер. Ландшафтный, д. 21а\n\nС радостью будем рядом!';
+      window.open('https://t.me/' + TG + '?text=' + encodeURIComponent(text), '_blank');
+    }
+    function sendNo() {
+      const text = 'Приглашение на свадьбу Сашечки и Олечки\n\n❌ К сожалению, не сможем присутствовать\n\n12 декабря 2026\nЖелаем вам счастья и Божьего благословения!';
+      window.open('https://t.me/' + TG + '?text=' + encodeURIComponent(text), '_blank');
+    }
+  </script>
+</body>
+</html>
