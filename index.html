@@ -69,7 +69,7 @@
       position: relative; 
     }
 
-    /* ========== HERO — максимально украшенный ========== */
+    /* ========== HERO ========== */
     .hero {
       min-height: 94vh; 
       display: flex; 
@@ -85,7 +85,6 @@
       overflow: hidden;
     }
 
-    /* Золотые уголки */
     .hero::before,
     .hero::after {
       content: '';
@@ -106,7 +105,6 @@
       border-right: 1.5px solid var(--gold);
     }
 
-    /* Дополнительные декоративные уголки */
     .corner-tl, .corner-tr, .corner-bl, .corner-br {
       position: absolute;
       width: 28px;
@@ -155,7 +153,6 @@
       padding: 0 10px;
     }
 
-    /* Торжественный каллиграфический шрифт */
     .names { 
       font-family: 'Great Vibes', cursive;
       font-size: 4.4rem; 
@@ -291,7 +288,6 @@
     }
     .fade-up.visible { opacity: 1; transform: translateY(0); }
     
-    /* ========== Остальные блоки ========== */
     .photo-block { 
       margin: 10px 24px 25px; 
       border-radius: 20px; 
@@ -414,7 +410,7 @@
       line-height: 1.6; 
     }
     
-    /* ===== ЦВЕТОВАЯ ПАЛИТРА — исправлено ===== */
+    /* Цветовая палитра */
     .palette {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -726,6 +722,7 @@
 
       <div id="details"></div>
 
+      <!-- Первое фото -->
       <div class="photo-block fade-up">
         <img src="couple.jpg" alt="Саша и Оля">
       </div>
@@ -742,6 +739,11 @@
           «Итак, что Бог сочетал,<br>того человек да не разлучает.»
           <cite>Мф. 19:6</cite>
         </div>
+      </div>
+
+      <!-- Второе фото молодожёнов -->
+      <div class="photo-block fade-up">
+        <img src="couple2.jpg" alt="Саша и Оля">
       </div>
 
       <div class="cal-wrap fade-up">
