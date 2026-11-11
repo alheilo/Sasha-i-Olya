@@ -320,23 +320,38 @@
     }
     
     .cal-table { width: 100%; border-collapse: collapse; text-align: center; display: table; table-layout: fixed; }
-    .cal-table th { font-family: 'Montserrat', sans-serif; font-size: 0.75rem; color: var(--text-light); font-weight: 500; padding: 10px 0 5px; }
-    .cal-table td { font-family: 'Montserrat', sans-serif; font-size: 0.9rem; color: var(--text); padding: 6px 0; }
+    .cal-table th { font-family: 'Montserrat', sans-serif; font-size: 0.75rem; color: var(--text-light); font-weight: 500; padding: 10px 0 5px; width: 14.28%; }
+    .cal-table td { font-family: 'Montserrat', sans-serif; font-size: 0.9rem; color: var(--text); padding: 8px 0; vertical-align: middle; width: 14.28%; position: relative; height: 36px; }
     
-    .day-heart-wrap { 
-      display: inline-flex; align-items: center; justify-content: center; 
-      width: 26px; height: 26px; border-radius: 50%; 
-      background: var(--rose-deep); color: white; font-weight: 600; 
-      box-shadow: 0 4px 10px rgba(142, 91, 102, 0.3); position: relative; 
-      margin: 0 auto;
+    /* SVG-сердечко для 12 декабря */
+    .day-heart {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 48px;
+      height: 44px;
+      z-index: 2;
+      pointer-events: none;
     }
-    .day-heart-wrap::after { 
-      content: '♥'; 
-      position: absolute; 
-      top: -5px; right: -7px; 
-      font-size: 14px; 
-      color: var(--rose-deep); 
-      text-shadow: 1px 1px 0 #fff;
+    .day-heart svg {
+      position: absolute;
+      width: 48px;
+      height: 44px;
+      filter: drop-shadow(0 3px 8px rgba(142, 91, 102, 0.38));
+    }
+    .day-heart span {
+      position: relative;
+      z-index: 2;
+      color: white;
+      font-weight: 600;
+      font-size: 0.95rem;
+      line-height: 1;
+      margin-top: 2px;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.2);
     }
     
     .content { padding: 10px 30px 20px; text-align: center; }
@@ -750,7 +765,14 @@
             </thead>
             <tbody>
               <tr><td></td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td></tr>
-              <tr><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td><div class="day-heart-wrap">12</div></td><td>13</td></tr>
+              <tr><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>
+                <div class="day-heart">
+                  <svg viewBox="0 0 34 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M17 27.5C17 27.5 3.5 18.5 3.5 10.5C3.5 6.5 6.5 3.5 10.5 3.5C13.5 3.5 15.8 5.2 17 7.5C18.2 5.2 20.5 3.5 23.5 3.5C27.5 3.5 30.5 6.5 30.5 10.5C30.5 18.5 17 27.5 17 27.5Z" fill="#8e5b66"/>
+                  </svg>
+                  <span>12</span>
+                </div>
+              </td><td>13</td></tr>
               <tr><td>14</td><td>15</td><td>16</td><td>17</td><td>18</td><td>19</td><td>20</td></tr>
               <tr><td>21</td><td>22</td><td>23</td><td>24</td><td>25</td><td>26</td><td>27</td></tr>
               <tr><td>28</td><td>29</td><td>30</td><td>31</td><td></td><td></td><td></td></tr>
@@ -766,9 +788,12 @@
       </div>
 
       <div class="section-title fade-up">О подарках</div>
-      <p class="fade-up" style="text-align: center; padding: 0 25px; font-size: 1.05rem; color: var(--text); line-height: 1.65; margin-bottom: 30px;">
+      <p class="fade-up" style="text-align: center; padding: 0 25px; font-size: 1.05rem; color: var(--text); line-height: 1.65; margin-bottom: 12px;">
         Ваше присутствие на нашем празднике — уже самый ценный подарок. ♡ <br><br>
         А если вы решите порадовать нас чем-то еще, мы будем очень признательны за конверт, который поможет нам осуществить наши первые семейные мечты. 🕊️🤍
+      </p>
+      <p class="fade-up" style="text-align: center; padding: 0 30px; font-size: 0.92rem; color: var(--text-light); line-height: 1.55; margin-bottom: 28px; font-family: 'Montserrat', sans-serif;">
+        Если появится желание сделать перевод — можно на Сбер по номерам телефонов Саши или Оли.
       </p>
 
       <div class="section-title fade-up">Цветовая палитра</div>
@@ -812,24 +837,33 @@
         </div>
       </div>
 
-      <p class="rsvp-text fade-up">
-        Пожалуйста, подтвердите своё присутствие<br>
-        или скажите, что не можете присутствовать,<br>
-        нажав на кнопку ниже
-      </p>
-      <p class="deadline fade-up">до 24 ноября 2026 года</p>
-
-      <div class="buttons fade-up">
-        <button class="btn btn-yes" onclick="chooseMessenger('yes')">Придём</button>
-        <button class="btn btn-no" onclick="chooseMessenger('no')">Не получится</button>
+      <div class="section-title fade-up">Связь с нами</div>
+      <div class="fade-up" style="text-align: center; margin: 0 25px 30px; font-family: 'Montserrat', sans-serif;">
+        <p style="font-size: 0.95rem; color: var(--text); margin-bottom: 14px; line-height: 1.6;">
+          По любым вопросам можно написать или позвонить:
+        </p>
+        <p style="font-size: 1.05rem; color: var(--rose-deep); margin-bottom: 8px;">
+          Саша — <a href="tel:+79102829308" style="color: var(--rose-deep); text-decoration: none; border-bottom: 1px solid rgba(142,91,102,0.35);">+7 910 282-93-08</a>
+        </p>
+        <p style="font-size: 1.05rem; color: var(--rose-deep);">
+          Оля — <a href="tel:+79086042329" style="color: var(--rose-deep); text-decoration: none; border-bottom: 1px solid rgba(142,91,102,0.35);">+7 908 604-23-29</a>
+        </p>
       </div>
 
-      <div class="messenger-choice" id="messengerChoice">
-        <p>Выберите удобный мессенджер:</p>
-        <div class="messenger-btns">
-          <button class="msg-btn" onclick="sendMessage('tg')">Telegram</button>
-          <button class="msg-btn vk" onclick="sendMessage('vk')">ВКонтакте</button>
-        </div>
+      <p class="rsvp-text fade-up">
+        Пожалуйста, дайте нам знать — сможете ли вы быть с нами в этот день<br>
+        или не получится присутствовать
+      </p>
+      <p class="deadline fade-up">до 24 ноября 2026 года включительно</p>
+
+      <div class="buttons fade-up" style="padding-bottom: 20px;">
+        <a href="https://forms.yandex.ru/u/6af43ffd974ab2c6b09fa407" 
+           target="_blank" 
+           rel="noopener" 
+           class="btn btn-yes" 
+           style="display: inline-block; text-decoration: none; text-align: center;">
+          Ответить на приглашение
+        </a>
       </div>
 
       <div class="footer fade-up">С любовью и молитвой,<br>Саша и Оля</div>
@@ -951,38 +985,6 @@
       if (frame) frame.src = 'https://yandex.ru/map-widget/v1/?ll=39.469%2C52.5885&z=16&pt=39.469,52.5885,pm2rdm&l=map';
     }
 
-    // ========== RSVP ==========
-    const TG_USERNAME = 'ayheilo';
-    const VK_USERNAME = 'alheilo';
-
-    let currentChoice = null;
-
-    function chooseMessenger(answer) {
-      currentChoice = answer;
-      const box = document.getElementById('messengerChoice');
-      box.classList.add('visible');
-      box.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }
-
-    function sendMessage(messenger) {
-      if (!currentChoice) return;
-      const isYes = currentChoice === 'yes';
-      
-      const yesText = '🌸 Приглашение на свадьбу Саши и Оли\n\n✅ МЫ ПРИДЁМ (семья)\n\n12 декабря 2026, 12:00\nг. Липецк, пер. Ландшафтный, д. 21а\n\nС радостью будем рядом!';
-      const noText  = 'Приглашение на свадьбу Саши и Оли\n\n❌ К сожалению, не сможем присутствовать\n\n12 декабря 2026\nЖелаем вам счастья и Божьего благословения!';
-      const text = isYes ? yesText : noText;
-
-      if (messenger === 'tg') {
-        window.open('https://t.me/' + TG_USERNAME + '?text=' + encodeURIComponent(text), '_blank');
-      } else if (messenger === 'vk') {
-        if (navigator.clipboard && navigator.clipboard.writeText) {
-          navigator.clipboard.writeText(text).then(() => {
-            alert('Текст ответа скопирован в буфер обмена.\nВставьте его в сообщение (Ctrl+V / ⌘V).');
-          }).catch(() => {});
-        }
-        window.open('https://vk.me/' + VK_USERNAME, '_blank');
-      }
-    }
   </script>
 </body>
 </html>
